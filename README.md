@@ -21,7 +21,7 @@
 # Установка
 
 - python 3.10+
-- pip install -r requirements_dev.txt
+- pip install -r requirements.txt
 
 # Запуск
 
@@ -39,3 +39,8 @@
 # Тесты
 
 - pytest -v tests
+
+# Миграции
+
+- alembic revision --autogenerate -m "init" --rev-id 0.0.1
+- alembic upgrade head
