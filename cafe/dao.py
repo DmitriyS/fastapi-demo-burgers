@@ -31,6 +31,7 @@ def add_order(order):
         session.add(position)
         session.flush()
     session.commit()
+    return o
 
 
 def get_orders():

@@ -1,6 +1,8 @@
 version: '3.7'
+
 services:
-  burgers:
+
+  web:
     restart: always
     build:
       context: .
@@ -8,3 +10,13 @@ services:
     ports:
       - '8000:8000'
     network_mode: host
+
+  worker:
+    build: ./project
+    command: celery -A cafe.background.app:celery worker --loglevel=info
+    depends_on:
+      - web
+      - redis
+
+  redis:
+    image: redis:6-alpine
