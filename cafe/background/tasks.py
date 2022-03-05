@@ -1,24 +1,26 @@
 import time
+from typing import Any
 
 from celery import Task
 
 from .app import celery
+from ..types import OrderId
 
 
 class BaseTask(Task):
     app = celery
     name: str
-    abstract = True
+    abstract: bool = True
 
-    def run(self, *args, **kwargs) -> None:
+    def run(self, *args: Any, **kwargs: Any) -> None:
         raise NotImplementedError()
 
 
-class PrepareOrderTask(BaseTask):
-    name = 'cook_burger'
+class CookBurgerTask(BaseTask):
+    name: str = 'cook_burger'
 
-    def run(self, order_id) -> None:
+    def run(self, order_id: OrderId) -> None:
         time.sleep(10)
 
 
-celery.register_task(PrepareOrderTask)
+celery.register_task(CookBurgerTask)

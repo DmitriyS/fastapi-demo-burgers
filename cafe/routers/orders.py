@@ -1,18 +1,19 @@
 from fastapi import APIRouter
 
-from cafe.background.tasks import PrepareOrderTask
-from cafe.dao import add_order, complete_order, get_orders
-from cafe.schemas import Order, OrderOut
+from cafe.background.tasks import CookBurgerTask
+from cafe.dao import create_order, complete_order, get_orders
+from cafe.schemas import OrderIn, OrderOut
 from cafe.types import OrderId
 
 
 router: APIRouter = APIRouter(prefix='/orders')
 
 
-@router.post('/')
-def create_order(order: Order):
-    o = add_order(order)
-    PrepareOrderTask().apply_async(args=(o.id,))
+@router.post('/', response_model=OrderOut)
+def make_order(order: OrderIn):
+    o = create_order(order)
+    CookBurgerTask().apply_async(args=(o.id,))
+    return o
 
 
 @router.get('/', response_model=list[OrderOut])

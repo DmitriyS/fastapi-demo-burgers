@@ -8,7 +8,7 @@ def get_burgers():
     return session.query(Burger).all()
 
 
-def add_burger(burger):
+def create_burger(burger):
     burger = Burger(**burger.dict(), created_at=datetime.now())
     session.add(burger)
     session.flush()
@@ -18,11 +18,11 @@ def add_burger(burger):
 def archive_burger(burger_id):
     burger = session.query(Burger).filter(Burger.id == burger_id).one_or_none()
     if burger:
-        burger.archived_at = datetime.now()
+        burger.archive(datetime.now())
         session.commit()
 
 
-def add_order(order):
+def create_order(order):
     o = Order(cost=order.cost, created_at=datetime.now())
     session.add(o)
     session.flush()
