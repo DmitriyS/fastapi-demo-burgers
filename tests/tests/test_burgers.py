@@ -2,6 +2,8 @@ from faker import Faker
 
 from tests.src.api import Api
 from tests.src.generator import TestGenerator
+from tests.src.models import TestOrder
+from tests.src.utils import wait_for
 
 
 def test_create_and_get_burger(api: Api, generator: TestGenerator) -> None:
@@ -41,7 +43,19 @@ def test_claim_ordered_burger(api: Api, faker: Faker, generator: TestGenerator) 
 
     burgers = api.get_burgers()
     order = api.make_order([faker.random_element(burgers)])
+
+    wait_for_order_is_prepared(api, order)
     api.claim_order(order)
 
     orders = api.get_orders()
     assert order not in orders
+
+
+def wait_for_order_is_prepared(api: Api, order: TestOrder) -> None:
+    def validator(orders: list[TestOrder]) -> bool:
+        for o in orders:
+            if o.id == order.id:
+                return o.state.is_prepared()
+        return False
+
+    wait_for(api.get_orders, validator, timeout=10)
