@@ -1,45 +1,41 @@
-from datetime import datetime
+from typing import Any, TypeVar
 
-from cafe.database import session
-from cafe.models import Burger, Order, OrderPosition
+from sqlalchemy.orm import Query, Session
 
-
-def get_burgers():
-    return session.query(Burger).all()
+from cafe.models import Base, Burger, Order
+from cafe.types import BurgerId, OrderId, OrderState, PROCESSING_ORDER_STATES
 
 
-def create_burger(burger):
-    burger = Burger(**burger.dict(), created_at=datetime.now())
-    session.add(burger)
-    session.flush()
-    session.commit()
+DbObject = TypeVar('DbObject', bound=Base)
 
 
-def archive_burger(burger_id):
-    burger = session.query(Burger).filter(Burger.id == burger_id).one_or_none()
-    if burger:
-        burger.archive(datetime.now())
-        session.commit()
+class BaseDao:
+    def __init__(self, session: Session) -> None:
+        self.session = session
+
+    def q(self, *entities: DbObject, **kwargs: Any) -> Query:
+        return self.session.query(*entities, **kwargs)
+
+    def save(self, obj: DbObject) -> DbObject:
+        self.session.add(obj)
+        self.session.flush()
+        return obj
 
 
-def create_order(order):
-    o = Order(cost=order.cost, created_at=datetime.now())
-    session.add(o)
-    session.flush()
-    for burger_id in order.burger_ids:
-        position = OrderPosition(o.id, burger_id)
-        session.add(position)
-        session.flush()
-    session.commit()
-    return o
+class CafeDao(BaseDao):
+    order_states: list[OrderState] = PROCESSING_ORDER_STATES
 
+    def find_burger_by_id(self, burger_id: BurgerId) -> Burger | None:
+        return self.q(Burger).filter(Burger.id == burger_id).one_or_none()
 
-def get_orders():
-    return session.query(Order).all()
+    def select_burgers(self, burger_ids: list[BurgerId]) -> list[Burger]:
+        return self.q(Burger).filter(Burger.id.in_(burger_ids)).all()
 
+    def get_active_burgers(self) -> list[Burger]:
+        return self.q(Burger).filter(Burger.archived_at.is_(None)).all()
 
-def complete_order(order_id):
-    order = session.query(Order).filter(Order.id == order_id).one_or_none()
-    if order:
-        order.complete(datetime.now())
-        session.commit()
+    def find_order_by_id(self, order_id: OrderId) -> Order | None:
+        return self.q(Order).filter(Order.id == order_id).one_or_none()
+
+    def select_processing_orders(self) -> list[Order]:
+        return self.q(Order).filter(Order.state.in_(self.order_states)).all()
