@@ -37,3 +37,7 @@ class TaskScheduler:
 class KitchenScheduler(TaskScheduler):
     def schedule_cook_burger(self, order_id: OrderId) -> None:
         self.sender.send_after_commit(CookBurgerTask, {'order_id': order_id})
+
+
+def create_scheduler(session: Session) -> KitchenScheduler:
+    return KitchenScheduler(TaskSender(session))

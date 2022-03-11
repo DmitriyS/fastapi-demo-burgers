@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from sqlalchemy.orm import Session
+
 from cafe.dao import CafeDao
 from cafe.errors import (
     BurgerArchivingError,
@@ -7,6 +9,7 @@ from cafe.errors import (
     OrderCompletionError,
     OrderCreationError,
     OrderNotFoundError,
+    OrderPrepareError,
 )
 from cafe.models import Burger, Order, OrderPosition
 from cafe.schemas import BurgerIn
@@ -36,11 +39,18 @@ class Cafe:
     def get_processing_orders(self) -> list[Order]:
         return self.dao.select_processing_orders()
 
+    def prepare_order(self, order_id: OrderId, now: datetime) -> None:
+        order = self.dao.get_order_by_id(order_id)
+        if not order.state.is_new():
+            raise OrderPrepareError(order.id)
+
+        order.prepare(now)
+
     def complete_order(self, order_id: OrderId, now: datetime) -> None:
         order = self.dao.find_order_by_id(order_id)
         if order is None:
             raise OrderNotFoundError()
-        if order.state.is_completed():
+        if not order.state.is_prepared():
             raise OrderCompletionError(order_id)
 
         order.complete(now)
@@ -56,3 +66,7 @@ class Cafe:
             self.dao.save(OrderPosition(order.id, b.id))
 
         return order
+
+
+def create_service(session: Session) -> Cafe:
+    return Cafe(CafeDao(session))

@@ -25,9 +25,6 @@ class BaseDao:
 class CafeDao(BaseDao):
     order_states: list[OrderState] = PROCESSING_ORDER_STATES
 
-    def query_burger_by_id(self, burger_id: BurgerId) -> Query:
-        return self.q(Burger).filter(Burger.id == burger_id)
-
     def find_burger_by_id(self, burger_id: BurgerId) -> Burger | None:
         return self.q(Burger).filter(Burger.id == burger_id).one_or_none()
 
@@ -37,8 +34,14 @@ class CafeDao(BaseDao):
     def get_active_burgers(self) -> list[Burger]:
         return self.q(Burger).filter(Burger.archived_at.is_(None)).all()
 
+    def query_order_by_id(self, order_id: OrderId) -> Query:
+        return self.q(Order).filter(Order.id == order_id)
+
     def find_order_by_id(self, order_id: OrderId) -> Order | None:
-        return self.q(Order).filter(Order.id == order_id).one_or_none()
+        return self.query_order_by_id(order_id).one_or_none()
+
+    def get_order_by_id(self, order_id: OrderId) -> Order:
+        return self.query_order_by_id(order_id).one()
 
     def select_processing_orders(self) -> list[Order]:
         return self.q(Order).filter(Order.state.in_(self.order_states)).all()

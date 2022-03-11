@@ -32,6 +32,10 @@ class OrderNotFoundError(NotFoundError):
     pass
 
 
+class OrderPrepareError(OrderError):
+    pass
+
+
 class OrderCompletionError(OrderError):
     code: str = 'order_complete_error'
 

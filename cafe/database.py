@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from cafe.config import Settings
+from cafe.config import Settings, get_settings
 
 
 def get_engine(settings: Settings) -> Engine:
@@ -16,3 +16,7 @@ class SessionFactory:
 
     def __call__(self) -> Session:
         return self.factory()
+
+
+def get_session_factory() -> SessionFactory:
+    return SessionFactory(get_settings())
