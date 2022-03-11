@@ -10,7 +10,7 @@ class Settings(BaseSettings):
 
     celery_broker_url: str = 'redis://'
     celery_result_backend: str = 'redis://'
-    celery_always_eager: bool = False
+    celery_task_always_eager: bool = False
 
     admin_username: str = 'admin'
     admin_password: str = 'password'

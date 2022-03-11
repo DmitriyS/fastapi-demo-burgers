@@ -12,7 +12,7 @@ __all__ = ('overrides', 'api', 'faker', 'generator')
 
 
 def get_settings_override() -> Settings:
-    return Settings(celery_always_eager=True)
+    return Settings(celery_task_always_eager=True)
 
 
 @fixture(scope='session', autouse=True)
