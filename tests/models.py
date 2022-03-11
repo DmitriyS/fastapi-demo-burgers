@@ -38,3 +38,6 @@ class TestOrder:
             id=data['id'],
             state=OrderState(data['state']),
         )
+
+    def __eq__(self, other: TestOrder) -> bool:
+        return self.id == other.id
