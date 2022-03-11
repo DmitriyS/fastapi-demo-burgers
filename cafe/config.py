@@ -6,8 +6,8 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     sqlalchemy_url: str = 'sqlite://'
 
-    celery_broker_url: str = 'file://'
-    celery_result_backend: str = 'file://'
+    celery_broker_url: str = 'redis://'
+    celery_result_backend: str = 'redis://'
     celery_always_eager: bool = False
 
     class Config:
