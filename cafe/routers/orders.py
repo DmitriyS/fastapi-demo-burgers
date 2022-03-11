@@ -1,4 +1,5 @@
 from datetime import datetime
+from http import HTTPStatus
 
 from fastapi import APIRouter, Depends
 
@@ -10,10 +11,10 @@ from cafe.service import Cafe
 from cafe.types import OrderId
 
 
-router: APIRouter = APIRouter(prefix='/orders')
+router: APIRouter = APIRouter(prefix='/orders', tags=['orders'])
 
 
-@router.post('/', response_model=OrderOut)
+@router.post('/', response_model=OrderOut, status_code=HTTPStatus.ACCEPTED)
 def make_order(
     order_in: OrderIn,
     cafe: Cafe = Depends(get_service),

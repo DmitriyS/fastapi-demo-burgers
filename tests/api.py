@@ -9,21 +9,21 @@ class Api:
         self.client = client
 
     def add_burger(self, burger: TestBurger) -> None:
-        r = self.client.post('/burgers/', json=burger.serialize())
-        self.assert_response_code(r, 200)
+        r = self.client.post('/admin/burgers/', json=burger.serialize())
+        self.assert_response_code(r, 201)
+
+    def remove_burger(self, burger: TestBurger) -> None:
+        r = self.client.delete(f'/admin/burgers/{burger.id}/')
+        self.assert_response_code(r, 204)
 
     def get_burgers(self) -> list[TestBurger]:
         r = self.client.get('/burgers/')
         self.assert_response_code(r, 200)
         return [TestBurger.deserialize(data) for data in r.json()]
 
-    def remove_burger(self, burger: TestBurger) -> None:
-        r = self.client.delete(f'/burgers/{burger.id}/')
-        self.assert_response_code(r, 200)
-
     def make_order(self, burgers: list[TestBurger]) -> TestOrder:
         r = self.client.post('/orders/', json={'burger_ids': [b.id for b in burgers]})
-        self.assert_response_code(r, 200)
+        self.assert_response_code(r, 202)
         return TestOrder.deserialize(r.json())
 
     def get_orders(self) -> list[TestOrder]:
