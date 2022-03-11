@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from decimal import Decimal
 
+from cafe.types import OrderState
+
 
 @dataclass
 class TestBurger:
@@ -28,11 +30,11 @@ class TestBurger:
 @dataclass
 class TestOrder:
     id: int
-    state: str
+    state: OrderState
 
     @classmethod
     def deserialize(cls, data: dict) -> TestOrder:
         return cls(
             id=data['id'],
-            state=data['state'],
+            state=OrderState(data['state']),
         )

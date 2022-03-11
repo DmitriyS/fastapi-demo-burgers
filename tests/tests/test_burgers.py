@@ -33,6 +33,7 @@ def test_order_several_burgers(api: Api, faker: Faker, generator: TestGenerator)
 
     orders = api.get_orders()
     assert order in orders
+    assert order.state.is_new()
 
 
 def test_claim_ordered_burger(api: Api, faker: Faker, generator: TestGenerator) -> None:

@@ -1,19 +1,26 @@
+from typing import NewType
+
 from fastapi.testclient import TestClient
 from requests import Response
 
 from .models import TestBurger, TestOrder
 
 
+Auth = NewType('Auth', tuple[str, str])
+
+
 class Api:
+    admin_auth: Auth = 'admin', 'password'
+
     def __init__(self, client: TestClient) -> None:
         self.client = client
 
-    def add_burger(self, burger: TestBurger) -> None:
-        r = self.client.post('/admin/burgers/', json=burger.serialize())
+    def add_burger(self, burger: TestBurger, auth: Auth | None = None) -> None:
+        r = self.client.post('/admin/burgers/', json=burger.serialize(), auth=auth or self.admin_auth)
         self.assert_response_code(r, 201)
 
-    def remove_burger(self, burger: TestBurger) -> None:
-        r = self.client.delete(f'/admin/burgers/{burger.id}/')
+    def remove_burger(self, burger: TestBurger, auth: Auth | None = None) -> None:
+        r = self.client.delete(f'/admin/burgers/{burger.id}/', auth=auth or self.admin_auth)
         self.assert_response_code(r, 204)
 
     def get_burgers(self) -> list[TestBurger]:

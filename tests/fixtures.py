@@ -8,7 +8,7 @@ from tests.api import Api
 from tests.generator import TestGenerator
 
 
-__all__ = ('api', 'faker', 'generator')
+__all__ = ('overrides', 'api', 'faker', 'generator')
 
 
 def get_settings_override() -> Settings:

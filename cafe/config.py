@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     celery_result_backend: str = 'redis://'
     celery_always_eager: bool = False
 
+    admin_username: str = 'admin'
+    admin_password: str = 'password'
+
     class Config:
         env_file = '.env'
 
