@@ -40,6 +40,10 @@
 
 - pytest -v tests
 
+# Документация
+
+- http://localhost:8000/docs
+
 # Миграции
 
 - alembic revision --autogenerate -m "init" --rev-id 0.0.1
