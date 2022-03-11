@@ -4,6 +4,8 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
+    project_name: str = 'Cafe'
+
     sqlalchemy_url: str = 'sqlite://'
 
     celery_broker_url: str = 'redis://'

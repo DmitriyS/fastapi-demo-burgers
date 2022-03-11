@@ -7,7 +7,7 @@ from cafe.config import Settings, get_settings
 settings: Settings = get_settings()
 
 celery: Celery = Celery(
-    'Cafe',
+    settings.project_name,
     broker=settings.celery_broker_url,
     backend=settings.celery_result_backend,
 )
