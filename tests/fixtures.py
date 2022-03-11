@@ -17,7 +17,8 @@ def overrides() -> None:
 
 @pytest.fixture(scope='session')
 def api() -> Api:
-    return Api(TestClient(app))
+    with TestClient(app) as client:
+        return Api(client)
 
 
 @pytest.fixture(scope='session')

@@ -1,9 +1,9 @@
 from celery import Celery
 
-from cafe.config import Settings
+from cafe.config import Settings, get_settings
 
 
-settings: Settings = Settings()
+settings: Settings = get_settings()
 
 celery: Celery = Celery('Cafe')
 celery.conf.broker_url = settings.celery_broker_url

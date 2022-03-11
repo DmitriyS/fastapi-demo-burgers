@@ -19,7 +19,6 @@ class BurgerOut(BurgerIn):
 
 class OrderIn(BaseModel):
     burger_ids: list[BurgerId]
-    cost: Decimal
 
 
 class OrderOut(BaseModel):

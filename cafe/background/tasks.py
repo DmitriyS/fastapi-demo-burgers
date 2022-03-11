@@ -1,14 +1,14 @@
 import time
 from typing import Any
 
-from celery import Task
+from celery import Celery, Task
 
+from cafe.types import OrderId
 from .app import celery
-from ..types import OrderId
 
 
 class BaseTask(Task):
-    app = celery
+    app: Celery = celery
     name: str
     abstract: bool = True
 

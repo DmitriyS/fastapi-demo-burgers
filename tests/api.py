@@ -18,7 +18,7 @@ class Api:
         return [TestBurger.deserialize(data) for data in r.json()]
 
     def remove_burger(self, burger: TestBurger) -> None:
-        r = self.client.delete(f'/burgers/{burger.id}')
+        r = self.client.delete(f'/burgers/{burger.id}/')
         self.assert_response_code(r, 200)
 
     def make_order(self, burgers: list[TestBurger]) -> TestOrder:
@@ -27,7 +27,7 @@ class Api:
         return TestOrder.deserialize(r.json())
 
     def get_orders(self) -> list[TestOrder]:
-        r = self.client.post('/orders/')
+        r = self.client.get('/orders/')
         self.assert_response_code(r, 200)
         return [TestOrder.deserialize(data) for data in r.json()]
 
@@ -36,4 +36,4 @@ class Api:
         self.assert_response_code(r, 200)
 
     def assert_response_code(self, response: Response, expected_code: int) -> None:
-        assert response.status_code, expected_code
+        assert response.status_code == expected_code, response

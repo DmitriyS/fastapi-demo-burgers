@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 
-from cafe.routers import burgers_router, orders_router
+from cafe.middleware import SimpleTransactionMiddleware
+from cafe.routers import burgers, orders
 
 
-class Cafe(FastAPI):
-    title: str = 'Burgers'
+app: FastAPI = FastAPI(title='Cafe', debug=True)
 
+app.include_router(burgers.router)
+app.include_router(orders.router)
 
-app: FastAPI = FastAPI()
-app.include_router(burgers_router)
-app.include_router(orders_router)
+app.add_middleware(SimpleTransactionMiddleware)
