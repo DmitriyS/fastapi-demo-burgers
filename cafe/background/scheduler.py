@@ -1,10 +1,12 @@
 from typing import Type
 
+from celery import Celery
 from celery.canvas import Signature
 from sqlalchemy import event
 from sqlalchemy.orm import Session
 
 from cafe.types import OrderId
+from .app import celery
 from .tasks import BaseTask, CookBurgerTask
 
 
@@ -12,6 +14,8 @@ TaskType = Type[BaseTask]
 
 
 class TaskSender:
+    app: Celery = celery
+
     def __init__(self, session: Session) -> None:
         self.session = session
 
@@ -22,7 +26,7 @@ class TaskSender:
             signature.apply_async()
 
     def make_signature(self, task_name: str, kwargs: dict | None = None) -> Signature:
-        return Signature(task_name, kwargs=kwargs)
+        return Signature(task_name, kwargs=kwargs, app=self.app)
 
 
 class TaskScheduler:
