@@ -29,6 +29,9 @@ class Burger(Base):
     def archive(self, now: datetime) -> None:
         self.archived_at = now
 
+    def is_archived(self) -> bool:
+        return self.archived_at is not None
+
 
 class Order(Base):
     __tablename__ = 'orders'

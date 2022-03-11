@@ -25,6 +25,9 @@ class BaseDao:
 class CafeDao(BaseDao):
     order_states: list[OrderState] = PROCESSING_ORDER_STATES
 
+    def query_burger_by_id(self, burger_id: BurgerId) -> Query:
+        return self.q(Burger).filter(Burger.id == burger_id)
+
     def find_burger_by_id(self, burger_id: BurgerId) -> Burger | None:
         return self.q(Burger).filter(Burger.id == burger_id).one_or_none()
 

@@ -13,5 +13,8 @@ class OrderState(str, Enum):
     prepared = 'prepared'
     completed = 'completed'
 
+    def is_completed(self) -> bool:
+        return self is self.completed
+
 
 PROCESSING_ORDER_STATES: list[OrderState] = [OrderState.new, OrderState.prepared]
