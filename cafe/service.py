@@ -54,4 +54,5 @@ class Cafe:
         order = self.dao.save(Order(cost, now))
         for b in burgers:
             self.dao.save(OrderPosition(order.id, b.id))
+
         return order
