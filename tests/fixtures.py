@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from pytest import fixture
 
 from cafe.app import app
+from cafe.config import Settings, get_settings
 from tests.api import Api
 from tests.generator import TestGenerator
 
@@ -10,9 +11,13 @@ from tests.generator import TestGenerator
 __all__ = ('api', 'faker', 'generator')
 
 
+def get_settings_override() -> Settings:
+    return Settings(celery_always_eager=True)
+
+
 @fixture(scope='session', autouse=True)
 def overrides() -> None:
-    app.dependency_overrides[lambda: {'celery_always_eager': False}] = lambda: {'celery_always_eager': True}
+    app.dependency_overrides[get_settings] = get_settings_override
 
 
 @fixture(scope='session')
