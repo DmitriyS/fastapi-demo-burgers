@@ -4,8 +4,8 @@ from pytest import fixture
 
 from cafe.app import app
 from cafe.config import Settings, get_settings
-from tests.api import Api
-from tests.generator import TestGenerator
+from tests.src.api import Api
+from tests.src.generator import TestGenerator
 
 
 __all__ = ('overrides', 'api', 'faker', 'generator')

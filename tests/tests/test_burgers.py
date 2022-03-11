@@ -1,7 +1,7 @@
 from faker import Faker
 
-from tests.api import Api
-from tests.generator import TestGenerator
+from tests.src.api import Api
+from tests.src.generator import TestGenerator
 
 
 def test_create_and_get_burger(api: Api, generator: TestGenerator) -> None:
