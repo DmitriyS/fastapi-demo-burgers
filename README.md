@@ -29,8 +29,8 @@
 
 # Использование
 
-- http -v POST localhost:8000/burgers/ name=бургер price:=10.0
-- http -v DELETE localhost:8000/burgers/{burger_id}/
+- http -v POST localhost:8000/admin/burgers/ name=bigmac price:=10.0
+- http -v DELETE localhost:8000/admin/burgers/{burger_id}/
 - http -v GET localhost:8000/burgers/
 - http -v POST localhost:8000/orders/ burger_ids:=[1,2,3]
 - http -v GET localhost:8000/orders/
