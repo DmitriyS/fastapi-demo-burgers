@@ -13,9 +13,9 @@ settings: Settings = get_settings()
 
 app: FastAPI = FastAPI(title=settings.project_name, debug=True)
 
-app.include_router(admin.router)
-app.include_router(burgers.router)
-app.include_router(orders.router)
+app.include_router(admin.router, prefix='/admin/burgers', tags=['admin'])
+app.include_router(burgers.router, prefix='/burgers', tags=['burgers'])
+app.include_router(orders.router, prefix='/orders', tags=['orders'])
 
 app.add_middleware(SimpleTransactionMiddleware)
 

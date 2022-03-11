@@ -11,7 +11,7 @@ from cafe.service import Cafe
 from cafe.types import OrderId
 
 
-router: APIRouter = APIRouter(prefix='/orders', tags=['orders'])
+router: APIRouter = APIRouter()
 
 
 @router.post('/', response_model=OrderOut, status_code=HTTPStatus.ACCEPTED)

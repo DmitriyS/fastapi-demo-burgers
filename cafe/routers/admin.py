@@ -9,7 +9,7 @@ from cafe.service import Cafe
 from cafe.types import BurgerId
 
 
-router: APIRouter = APIRouter(prefix='/admin/burgers', tags=['admin'])
+router: APIRouter = APIRouter()
 
 
 @router.post('/', status_code=HTTPStatus.CREATED)
