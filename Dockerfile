@@ -8,4 +8,4 @@ RUN pip install -r /tmp/requirements.txt --no-cache-dir
 WORKDIR /app
 COPY . .
 
-CMD ["uvicorn", "cafe.app:app"]
+CMD ["uvicorn", "cafe.app:app", "--host", "0.0.0.0"]
