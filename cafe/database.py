@@ -1,3 +1,9 @@
+from __future__ import annotations
+
+from contextlib import ContextDecorator
+from typing import Type
+
+from billiard.einfo import Traceback
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -20,3 +26,24 @@ class SessionFactory:
 
 def get_session_factory() -> SessionFactory:
     return SessionFactory(get_settings())
+
+
+class SimpleTransaction(ContextDecorator):
+    def __init__(self, session: Session) -> None:
+        self.session = session
+
+    def __enter__(self) -> SimpleTransaction:
+        return self
+
+    def __exit__(self, exc_type: Type[Exception] | None, exc_val: Exception | None, exc_tb: Traceback | None) -> None:
+        if exc_type is None:
+            self.session.commit()
+        else:
+            if self.session.is_active:
+                self.session.rollback()
+
+        self.session.close()
+
+
+def transaction(session: Session) -> SimpleTransaction:
+    return SimpleTransaction(session)

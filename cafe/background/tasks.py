@@ -5,7 +5,7 @@ from typing import Any
 
 from celery import Celery, Task
 
-from cafe.database import get_session_factory
+from cafe.database import get_session_factory, transaction
 from cafe.service import Cafe, create_service
 from cafe.types import OrderId
 from .app import celery
@@ -27,15 +27,8 @@ class SimpleTransactionalTask(BaseTask):
         self.session = self.session_factory()
 
     def run(self, *args: Any, **kwargs: Any) -> None:
-        try:
+        with transaction(self.session):
             self.run_in_transaction(*args, **kwargs)
-            self.session.commit()
-        except Exception:
-            if self.session.is_active:
-                self.session.rollback()
-            raise
-        finally:
-            self.session.close()
 
     def run_in_transaction(self, *args: Any, **kwargs: Any) -> None:
         raise NotImplementedError()
